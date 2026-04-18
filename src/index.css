@@ -1,0 +1,8 @@
+@import 'tailwindcss';
+@import './styles/theme.css';
+
+@theme {
+  --color-brand-primary: #0174b7;
+  --shadow-soft: 0 12px 30px rgba(2, 17, 31, 0.08);
+  --shadow-premium: 0 20px 40px rgba(1, 27, 47, 0.22);
+}
