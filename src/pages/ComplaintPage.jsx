@@ -12,21 +12,30 @@ const ComplaintPage = () => {
   const [errors, setErrors] = useState({})
 
   const { loading, submit } = useEmailForm({
-    ownerTemplateEnv: 'VITE_EMAILJS_COMPLAINT_OWNER_TEMPLATE_ID',
-    replyTemplateEnv: 'VITE_EMAILJS_COMPLAINT_REPLY_TEMPLATE_ID',
+    ownerTemplateEnv: 'VITE_EMAILJS_RECEIPT_OWNER_TEMPLATE_ID',
+    replyTemplateEnv: 'VITE_EMAILJS_RECEIPT_REPLY_TEMPLATE_ID',
     successMessage: 'Complaint submitted. Our team will contact you shortly.',
     mapPayload: async (data) => ({
       ownerParams: {
         from_name: data.fullName,
         from_email: data.email,
-        phone: data.phone,
-        vehicle: data.vehicle,
-        message: data.complaint,
+        phone: data.phone?.trim() || 'Not provided',
+        chassis_number: 'N/A',
+        register_number: 'N/A',
+        model_name: data.vehicle?.trim() || 'Not provided',
+        complaint_message: data.complaint,
+        receipt_file_name: 'No file uploaded',
+        receipt_attachment: '',
+        receipt_image_src: '',
+        receipt_download_url: '',
+        receipt_uploaded: 'No',
+        receipt_preview_style: 'display:none;',
+        receipt_link_style: 'display:none;',
       },
       replyParams: {
         to_name: data.fullName,
         to_email: data.email,
-        message: 'We have received your complaint and started review immediately.',
+        message: 'We have received your submission and started review immediately.',
       },
     }),
   })

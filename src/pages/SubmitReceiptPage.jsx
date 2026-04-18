@@ -5,7 +5,10 @@ import FormShell from '../components/forms/FormShell'
 import Seo from '../seo/Seo'
 import { breadcrumbSchema } from '../seo/schemas'
 import { useEmailForm } from '../hooks/useEmailForm'
-import { fileToBase64 } from '../utils/file'
+import { compressImageToDataUrl } from '../utils/file'
+
+const MAX_RECEIPT_IMAGE_SIZE_BYTES = 5 * 1024 * 1024
+const EMAILJS_IMAGE_VARIABLE_BUDGET_BYTES = 32 * 1024
 
 const initial = {
   fullName: '',
@@ -30,18 +33,23 @@ const SubmitReceiptPage = () => {
       ownerParams: {
         from_name: data.fullName,
         from_email: data.email,
-        phone: data.phone,
+        phone: data.phone?.trim() || 'Not provided',
         chassis_number: data.chassisNumber,
         register_number: data.registerNumber,
         model_name: data.modelName,
-        complaint_message: data.complaintMessage,
-        receipt_file_name: extra.receiptName,
-        receipt_attachment: extra.receiptBase64,
+        complaint_message: data.complaintMessage?.trim() || 'No complaint message provided.',
+        receipt_file_name: extra.receiptName || 'No file uploaded',
+        receipt_attachment: '',
+        receipt_image_src: extra.receiptBase64 || '',
+        receipt_download_url: '',
+        receipt_uploaded: extra.receiptBase64 ? 'Yes' : 'No',
+        receipt_preview_style: extra.receiptBase64 ? 'display:block;' : 'display:none;',
+        receipt_link_style: extra.receiptBase64 ? 'display:inline;' : 'display:none;',
       },
       replyParams: {
         to_name: data.fullName,
         to_email: data.email,
-        message: 'Your receipt has been received successfully. Bhinder Corporation will verify and update you shortly.',
+        message: 'Your receipt submission has been received successfully. Bhinder Corporation will verify and update you shortly.',
       },
     }),
   })
@@ -50,12 +58,16 @@ const SubmitReceiptPage = () => {
     const next = {}
     if (!form.fullName.trim()) next.fullName = 'Full name is required.'
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) next.email = 'Valid email required.'
-    if (!/^\+?[\d\s]{8,}$/.test(form.phone)) next.phone = 'Valid phone required.'
+    if (form.phone.trim() && !/^\+?[\d\s]{8,}$/.test(form.phone)) next.phone = 'Enter a valid phone number or leave it empty.'
     if (!form.chassisNumber.trim()) next.chassisNumber = 'Chassis number is required.'
     if (!form.registerNumber.trim()) next.registerNumber = 'Register number is required.'
     if (!form.modelName.trim()) next.modelName = 'Model name is required.'
-    if (!form.receipt) next.receipt = 'Receipt upload is required.'
-    if (form.complaintMessage.trim().length < 10) next.complaintMessage = 'Complaint message must be at least 10 characters.'
+    if (form.receipt && !String(form.receipt.type).startsWith('image/')) {
+      next.receipt = 'Only image files are supported for email preview.'
+    }
+    if (form.receipt && form.receipt.size > MAX_RECEIPT_IMAGE_SIZE_BYTES) {
+      next.receipt = 'Image is too large. Please upload an image smaller than 5MB.'
+    }
     setErrors(next)
     return Object.keys(next).length === 0
   }
@@ -64,14 +76,28 @@ const SubmitReceiptPage = () => {
     e.preventDefault()
     if (!validate()) return
 
-    const receiptBase64 = await fileToBase64(form.receipt)
+    let receiptBase64 = ''
+    if (form.receipt) {
+      try {
+        receiptBase64 = await compressImageToDataUrl(form.receipt, {
+          maxBytes: EMAILJS_IMAGE_VARIABLE_BUDGET_BYTES,
+          maxDimension: 1080,
+        })
+      } catch (error) {
+        setErrors((current) => ({
+          ...current,
+          receipt: error.message || 'Image could not be prepared for email. Please try another image.',
+        }))
+        return
+      }
+    }
 
     await submit(
       form,
       () => setForm(initial),
       {
         receiptBase64,
-        receiptName: form.receipt.name,
+        receiptName: form.receipt?.name || '',
       },
     )
   }
@@ -103,13 +129,14 @@ const SubmitReceiptPage = () => {
               <input
                 id="receipt-file"
                 type="file"
-                accept="image/*,.pdf"
+                accept="image/*"
                 onChange={(e) => setForm((v) => ({ ...v, receipt: e.target.files?.[0] || null }))}
                 className="hidden"
               />
               <div className="flex w-full cursor-pointer items-center gap-2 rounded-xl border border-white/14 bg-gradient-to-r from-white/[0.06] to-white/[0.03] px-4 py-3 text-sm text-white/85">
-                <Camera size={16} className="text-white/85" /> Upload Your vehicle Receipt
+                <Camera size={16} className="text-white/85" /> Upload Receipt Image (Optional)
               </div>
+              {form.receipt ? <span className="mt-1 block text-xs text-white/70">Selected: {form.receipt.name}</span> : null}
               {errors.receipt && <span className="mt-1 block text-xs text-red-400">{errors.receipt}</span>}
             </label>
 
@@ -120,7 +147,7 @@ const SubmitReceiptPage = () => {
                 <textarea
                   id="receipt-message"
                   rows={5}
-                  placeholder="ADD YOUR COMPLAINT HERE"
+                  placeholder="ADD YOUR COMPLAINT HERE (OPTIONAL)"
                   value={form.complaintMessage}
                   onChange={(e) => setForm((v) => ({ ...v, complaintMessage: e.target.value }))}
                   className="w-full rounded-xl border border-white/14 bg-gradient-to-r from-white/[0.06] to-white/[0.03] py-3 pl-8 pr-4 text-sm text-white outline-none transition placeholder:text-white/65 focus:border-brand-primary/85 focus:ring-2 focus:ring-brand-primary/30"

@@ -12,8 +12,14 @@ export const sendDualTemplate = async ({ ownerTemplateId, replyTemplateId, owner
   const publicKey = requireEnv('VITE_EMAILJS_PUBLIC_KEY')
   const serviceId = requireEnv('VITE_EMAILJS_SERVICE_ID')
 
-  await Promise.all([
-    emailjs.send(serviceId, ownerTemplateId, ownerParams, { publicKey }),
-    emailjs.send(serviceId, replyTemplateId, replyParams, { publicKey }),
-  ])
+  try {
+    await Promise.all([
+      emailjs.send(serviceId, ownerTemplateId, ownerParams, { publicKey }),
+      emailjs.send(serviceId, replyTemplateId, replyParams, { publicKey }),
+    ])
+  } catch (error) {
+    const status = error?.status ? ` (status ${error.status})` : ''
+    const details = error?.text ? ` ${error.text}` : ''
+    throw new Error(`Failed to send email${status}.${details}`.trim())
+  }
 }

@@ -5,6 +5,7 @@ import Seo from '../seo/Seo'
 import { autoDealerSchema, baseSchema, breadcrumbSchema, localBusinessSchema } from '../seo/schemas'
 import MotionSection from '../components/animations/MotionSection'
 import AnimatedButton from '../components/ui/AnimatedButton'
+import { company } from '../data/company'
 
 const brandLogos = [
   { name: 'Lexus', src: '/assets/brand/image%202.svg' },
@@ -45,6 +46,7 @@ const driveFeatures = [
 
 const HomePage = () => {
   const heroWords = ['Luxury', 'Reliability', 'Performance']
+  const joinWhatsappHref = `https://wa.me/${company.whatsappNumber}?text=${encodeURIComponent('Hello Bhinder Corporation, please add me to your latest offers and special deals on WhatsApp.')}`
 
   return (
     <>
@@ -165,7 +167,7 @@ const HomePage = () => {
 
             <div className="offer-join-wrap">
               <input type="tel" defaultValue="+ 254" className="offer-phone-input" aria-label="WhatsApp number" />
-              <Link to="/#site-footer" className="offer-join-btn">Join</Link>
+              <a href={joinWhatsappHref} target="_blank" rel="noreferrer" className="offer-join-btn">Join</a>
             </div>
 
             <p className="mt-4">

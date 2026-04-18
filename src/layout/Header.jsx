@@ -1,4 +1,4 @@
-import { Link, NavLink, useLocation } from 'react-router-dom'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { Menu, Search, PhoneCall, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { AnimatePresence, LayoutGroup, m, useReducedMotion } from 'framer-motion'
@@ -14,14 +14,39 @@ const navItems = [
 
 const Header = () => {
   const [open, setOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
   const [scrolled, setScrolled] = useState(false)
   const [footerInView, setFooterInView] = useState(false)
   const prefersReducedMotion = useReducedMotion()
   const location = useLocation()
+  const navigate = useNavigate()
+  const whatsappHref = `https://wa.me/${company.whatsappNumber}?text=${encodeURIComponent('Hello Bhinder Corporation, I would like to inquire about your vehicles.')}`
+
+  const submitSearch = (raw) => {
+    const query = raw.trim().replace(/\s+/g, ' ')
+    if (!query) return
+
+    navigate(`/vehicles?q=${encodeURIComponent(query)}`)
+    setSearchOpen(false)
+  }
 
   useEffect(() => {
     setOpen(false)
   }, [location.pathname, location.hash])
+
+  useEffect(() => {
+    if (!searchOpen) return undefined
+
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setSearchOpen(false)
+      }
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [searchOpen])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16)
@@ -130,10 +155,10 @@ const Header = () => {
             </LayoutGroup>
             <div className="hidden items-center justify-center gap-2 md:flex">
 
-              <a href={company.mapsUrl} target="_blank" rel="noreferrer" className="!text-white" aria-label="Open map location">
+              <button type="button" onClick={() => setSearchOpen(true)} className="!text-white" aria-label="Search vehicles">
                 <Search size={17} />
-              </a>
-              <a href={`tel:${company.phone.replace(/\s+/g, '')}`} className="!text-white" aria-label="Call Bhinder Corporation">
+              </button>
+              <a href={whatsappHref} target="_blank" rel="noreferrer" className="!text-white" aria-label="WhatsApp Bhinder Corporation">
                 <PhoneCall size={17} />
               </a>
             </div>
@@ -203,14 +228,71 @@ const Header = () => {
               </nav>
 
               <div className="mt-8 flex items-center gap-4 border-t border-white/10 pt-5">
-                <a href={company.mapsUrl} target="_blank" rel="noreferrer" className="!text-white" aria-label="Open map location">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false)
+                    setSearchOpen(true)
+                  }}
+                  className="!text-white"
+                  aria-label="Search vehicles"
+                >
                   <Search size={18} />
-                </a>
-                <a href={`tel:${company.phone.replace(/\s+/g, '')}`} className="!text-white" aria-label="Call Bhinder Corporation">
+                </button>
+                <a href={whatsappHref} target="_blank" rel="noreferrer" className="!text-white" aria-label="WhatsApp Bhinder Corporation">
                   <PhoneCall size={18} />
                 </a>
               </div>
             </m.aside>
+          </>
+        ) : null}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {searchOpen ? (
+          <>
+            <m.div
+              className="fixed inset-0 z-[60] bg-black/55"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setSearchOpen(false)}
+              aria-hidden="true"
+            />
+
+            <m.div
+              className="fixed inset-x-4 top-[98px] z-[70] mx-auto w-full max-w-xl rounded-2xl border border-brand-primary/40 bg-[#03070d]/95 p-4 text-white shadow-2xl backdrop-blur-md"
+              initial={{ opacity: 0, y: -16, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -12, scale: 0.98 }}
+              transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+              role="dialog"
+              aria-label="Vehicle search"
+            >
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault()
+                  submitSearch(searchTerm)
+                }}
+                className="flex items-center gap-2"
+              >
+                <input
+                  autoFocus
+                  type="search"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search by brand, model, keyword..."
+                  className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/65 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/30"
+                />
+                <button type="submit" className="rounded-xl bg-brand-primary px-4 py-3 text-sm font-semibold text-white">
+                  Search
+                </button>
+                <button type="button" onClick={() => setSearchOpen(false)} className="rounded-xl border border-white/15 px-3 py-3 text-sm font-semibold text-white/85">
+                  <X size={16} />
+                </button>
+              </form>
+            </m.div>
           </>
         ) : null}
       </AnimatePresence>

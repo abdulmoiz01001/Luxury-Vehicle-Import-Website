@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { SlidersHorizontal, ChevronDown } from 'lucide-react'
 import FilterSidebar from '../components/FilterSidebar'
 import VehicleCard from '../components/VehicleCard'
@@ -7,13 +7,47 @@ import { breadcrumbSchema } from '../seo/schemas'
 import { allVehicles } from '../utils/vehicles'
 import { useVehicleFilters } from '../hooks/useVehicleFilters'
 import { useCompare } from '../context/CompareContext'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import useDebouncedValue from '../hooks/useDebouncedValue'
 
 const VehicleListingPage = () => {
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const queryParam = searchParams.get('q') || ''
   const { selectedSlugs, toggleCompare } = useCompare()
   const { filters, options, filteredVehicles, updateFilter, resetFilters } = useVehicleFilters(allVehicles)
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+  const [searchInput, setSearchInput] = useState(queryParam)
+  const debouncedSearchInput = useDebouncedValue(searchInput, 350)
+  const normalizedDebouncedSearch = useMemo(() => debouncedSearchInput.trim(), [debouncedSearchInput])
+
+  useEffect(() => {
+    setSearchInput(queryParam)
+  }, [queryParam])
+
+  useEffect(() => {
+    updateFilter('search', normalizedDebouncedSearch)
+  }, [normalizedDebouncedSearch, updateFilter])
+
+  useEffect(() => {
+    if (normalizedDebouncedSearch === queryParam) return
+
+    const next = new URLSearchParams(searchParams)
+    if (normalizedDebouncedSearch) {
+      next.set('q', normalizedDebouncedSearch)
+    } else {
+      next.delete('q')
+    }
+    setSearchParams(next, { replace: true })
+  }, [normalizedDebouncedSearch, queryParam, searchParams, setSearchParams])
+
+  const handleResetFilters = () => {
+    resetFilters()
+    setSearchInput('')
+    const next = new URLSearchParams(searchParams)
+    next.delete('q')
+    setSearchParams(next, { replace: true })
+  }
 
   const handleCompareToggle = (slug) => {
     const exists = selectedSlugs.includes(slug)
@@ -60,17 +94,31 @@ const VehicleListingPage = () => {
                 filters={{ ...filters, resultsCount: filteredVehicles.length }}
                 options={options}
                 updateFilter={updateFilter}
-                resetFilters={resetFilters}
+                resetFilters={handleResetFilters}
               />
             </div>
           </div>
 
           <div>
+            <div className="mb-5">
+              <label htmlFor="inventory-search" className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
+                Search Inventory
+              </label>
+              <input
+                id="inventory-search"
+                type="search"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder="Type keywords like BMW, hybrid, sport..."
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+              />
+            </div>
+
             {filteredVehicles.length === 0 ? (
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center">
                 <h2 className="text-2xl font-black text-slate-900">No vehicles found</h2>
                 <p className="mt-2 text-sm text-slate-600">Try adjusting filters to see available inventory.</p>
-                <button type="button" onClick={resetFilters} className="btn-primary mt-5">
+                <button type="button" onClick={handleResetFilters} className="btn-primary mt-5">
                   Reset Filters
                 </button>
               </div>

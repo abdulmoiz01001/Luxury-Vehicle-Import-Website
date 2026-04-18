@@ -93,7 +93,7 @@ const Footer = () => {
               </m.span>
               <div>
                 <small>Email</small>
-                <a href={`mailto:${company.email}`}>
+                <a href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(company.email)}`} target="_blank" rel="noreferrer">
                   {company.email}
                 </a>
               </div>

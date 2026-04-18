@@ -71,14 +71,8 @@ npm run build
 VITE_EMAILJS_PUBLIC_KEY=
 VITE_EMAILJS_SERVICE_ID=
 
-VITE_EMAILJS_CONTACT_OWNER_TEMPLATE_ID=
-VITE_EMAILJS_CONTACT_REPLY_TEMPLATE_ID=
-
 VITE_EMAILJS_RECEIPT_OWNER_TEMPLATE_ID=
 VITE_EMAILJS_RECEIPT_REPLY_TEMPLATE_ID=
-
-VITE_EMAILJS_COMPLAINT_OWNER_TEMPLATE_ID=
-VITE_EMAILJS_COMPLAINT_REPLY_TEMPLATE_ID=
 ```
 
 ## Feature Coverage
@@ -95,9 +89,8 @@ VITE_EMAILJS_COMPLAINT_REPLY_TEMPLATE_ID=
   - Search
 - Vehicle detail route: `/vehicle/:slug`
 - Compare vehicles (2-3 selectors)
-- Contact page form
 - Complaint page form
-- Submit receipt page form with file upload
+- Submit receipt page form with optional phone, optional complaint text, and optional file upload
 - WhatsApp prefilled inquiry CTA
 - 404 page
 
@@ -142,25 +135,21 @@ VITE_EMAILJS_COMPLAINT_REPLY_TEMPLATE_ID=
 2. Allow requested permissions.
 3. Confirm service status is active.
 
-### 4. Create Owner Templates
+### 4. Create Owner Template
 
-Create 3 owner templates:
+Create 1 owner template:
 
-1. Contact Owner Template
-2. Receipt Owner Template
-3. Complaint Owner Template
+1. Receipt/Complaint Owner Template
 
-Each should send submission details to:
+This template receives both receipt and complaint submissions and should send details to:
 
 `Bhindercorporationltd254@gmail.com`
 
-### 5. Create Auto Reply Templates
+### 5. Create Auto Reply Template
 
-Create 3 customer auto-reply templates:
+Create 1 customer auto-reply template:
 
-1. Contact Reply Template
-2. Receipt Reply Template
-3. Complaint Reply Template
+1. Receipt/Complaint Reply Template
 
 Template includes:
 
@@ -178,6 +167,10 @@ From EmailJS dashboard collect:
 
 Map them into `.env` exactly using names in `.env.example`.
 
+Current service ID provided by you:
+
+- `VITE_EMAILJS_SERVICE_ID=service_9c6jnzw`
+
 ### 7. Place .env Variables
 
 Create `.env` in project root (same level as `package.json`) and paste all values.
@@ -186,7 +179,6 @@ Create `.env` in project root (same level as `package.json`) and paste all value
 
 1. Run `npm run dev`
 2. Submit each form:
-   - `/contact`
    - `/submit-receipt`
    - `/complaint`
 3. Confirm:
@@ -227,16 +219,131 @@ Use variables:
 - `complaint_message`
 - `receipt_file_name`
 - `receipt_attachment`
+- `receipt_image_src`
+- `receipt_download_url`
+- `receipt_uploaded`
 
-### Complaint Owner
+Recommended fallback handling in template content:
 
-Use variables:
+- Show `phone` as "Not provided" if empty
+- Show `complaint_message` as "No complaint message provided." if empty
+- Show `receipt_file_name` as "No file uploaded" if empty
 
-- `from_name`
-- `from_email`
-- `phone`
-- `vehicle`
-- `message`
+Inline image preview and download in owner template HTML:
+
+```html
+<div style="font-family: Arial, sans-serif; color: #111827; font-size: 14px;">
+  <p><strong>Receipt Uploaded:</strong> {{receipt_uploaded}}</p>
+  <p><strong>File Name:</strong> {{receipt_file_name}}</p>
+
+  {{#receipt_image_src}}
+  <div style="margin: 12px 0;">
+    <img
+      src="{{receipt_image_src}}"
+      alt="Uploaded receipt"
+      style="max-width: 100%; width: 420px; height: auto; border: 1px solid #e5e7eb; border-radius: 8px;"
+    />
+  </div>
+  <p>
+    <a href="{{receipt_download_url}}" target="_blank" rel="noreferrer">Open / Download Receipt Image</a>
+  </p>
+  {{/receipt_image_src}}
+</div>
+```
+
+Important note:
+
+- Email clients decide rendering rules. Most support inline image data URLs, but some may block preview by policy.
+- Even when blocked, owner still gets filename and base64 payload fields.
+
+Complaint page also uses the same Receipt Owner variables above.
+
+## EmailJS Template Creation (Click-by-Click)
+
+Based on the screen you shared:
+
+1. Go to **Email Templates** in EmailJS.
+2. Click **Create New Template**.
+3. In the popup, select **Contact Us** (or blank/basic template if available).
+4. Click **Create Template**.
+5. Rename the template clearly, for example:
+  - `receipt_owner`
+  - `receipt_reply`
+6. In the template editor, set:
+  - **To Email** for owner templates: `Bhindercorporationltd254@gmail.com`
+  - **To Email** for reply templates: `{{to_email}}`
+7. Paste subject/body from the examples below.
+8. Save template and copy its Template ID into `.env`.
+
+### 1) Receipt Owner Template (for your team)
+
+Subject:
+
+```text
+New Receipt Submission - {{from_name}}
+```
+
+Body:
+
+```text
+You received a new receipt submission.
+
+Full Name: {{from_name}}
+Email: {{from_email}}
+Phone: {{phone}}
+Chassis Number: {{chassis_number}}
+Register Number: {{register_number}}
+Model Name: {{model_name}}
+
+Complaint Message:
+{{complaint_message}}
+
+Receipt File Name: {{receipt_file_name}}
+Receipt Attachment (Base64):
+{{receipt_attachment}}
+```
+
+Notes:
+
+- Optional values are already handled in app code.
+- If user skips optional fields, email will show friendly fallback text.
+
+### 2) Receipt Reply Template (customer confirmation)
+
+To Email:
+
+```text
+{{to_email}}
+```
+
+Subject:
+
+```text
+Receipt Submission Received - Bhinder Corporation Ltd
+```
+
+Body:
+
+```text
+Dear {{to_name}},
+
+Thank you for submitting your receipt.
+We have received your details successfully and our team will review them shortly.
+
+Regards,
+Bhinder Corporation Ltd
+```
+
+## .env Mapping You Need
+
+Set these with your actual IDs from EmailJS:
+
+```env
+VITE_EMAILJS_PUBLIC_KEY=YOUR_PUBLIC_KEY
+VITE_EMAILJS_SERVICE_ID=service_9c6jnzw
+VITE_EMAILJS_RECEIPT_OWNER_TEMPLATE_ID=YOUR_RECEIPT_OWNER_TEMPLATE_ID
+VITE_EMAILJS_RECEIPT_REPLY_TEMPLATE_ID=YOUR_RECEIPT_REPLY_TEMPLATE_ID
+```
 
 ## Deployment Guide
 
@@ -261,8 +368,56 @@ Use variables:
 
 - Verify all routes load correctly on refresh.
 - Confirm `robots.txt` and `sitemap.xml` are publicly accessible.
-- Test all three EmailJS forms in production.
+- Test receipt and complaint EmailJS forms in production.
 - Check SEO metadata with browser dev tools.
+
+## How To Send Me Requirements
+
+Use this format so I can implement quickly without back-and-forth:
+
+1. Business rules
+- Which fields are required vs optional for each form.
+- Max file size and allowed file types.
+
+2. Owner email content
+- Exact subject line per form.
+- Exact fields to include in owner email body.
+
+3. Customer confirmation content
+- Exact subject line.
+- Exact thank-you message text.
+
+4. EmailJS IDs
+- `VITE_EMAILJS_PUBLIC_KEY`
+- `VITE_EMAILJS_SERVICE_ID`
+- `VITE_EMAILJS_RECEIPT_OWNER_TEMPLATE_ID`
+- `VITE_EMAILJS_RECEIPT_REPLY_TEMPLATE_ID`
+
+5. Branding preferences
+- Sender name (for example: Bhinder Corporation Ltd)
+- Reply-to email address
+
+Quick copy/paste template:
+
+```text
+FORM: submit-receipt
+Required fields:
+Optional fields:
+Allowed file types:
+Max file size:
+
+OWNER EMAIL SUBJECT:
+OWNER EMAIL BODY FIELDS:
+
+CUSTOMER EMAIL SUBJECT:
+CUSTOMER EMAIL MESSAGE:
+
+ENV VALUES:
+VITE_EMAILJS_PUBLIC_KEY=
+VITE_EMAILJS_SERVICE_ID=
+VITE_EMAILJS_RECEIPT_OWNER_TEMPLATE_ID=
+VITE_EMAILJS_RECEIPT_REPLY_TEMPLATE_ID=
+```
 
 ## Notes About Assets
 

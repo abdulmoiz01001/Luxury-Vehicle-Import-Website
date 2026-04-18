@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { getVehicleSeats } from '../utils/vehicles'
 
 const defaultFilters = {
@@ -33,6 +33,7 @@ export const useVehicleFilters = (vehicles = []) => {
 
   const filteredVehicles = useMemo(() => {
     const query = filters.search.trim().toLowerCase()
+    const queryTokens = query.split(/\s+/).filter(Boolean)
     const selectedTransmissions = new Set((filters.transmissions || []).map((item) => String(item).toLowerCase()))
     const selectedBrands = new Set((filters.brands || []).map((item) => String(item).toLowerCase()))
     const selectedPassengers = new Set((filters.passengers || []).map((item) => Number(item)))
@@ -43,7 +44,7 @@ export const useVehicleFilters = (vehicles = []) => {
       const vehicleBrand = String(vehicle.brand).toLowerCase()
 
       return (
-        searchable.includes(query) &&
+        queryTokens.every((token) => searchable.includes(token)) &&
         (selectedTransmissions.size === 0 || selectedTransmissions.has(vehicleTransmission)) &&
         (selectedBrands.size === 0 || selectedBrands.has(vehicleBrand)) &&
         (selectedPassengers.size === 0 || selectedPassengers.has(getVehicleSeats(vehicle))) &&
@@ -58,13 +59,13 @@ export const useVehicleFilters = (vehicles = []) => {
     })
   }, [vehicles, filters])
 
-  const updateFilter = (name, value) => {
+  const updateFilter = useCallback((name, value) => {
     setFilters((current) => ({ ...current, [name]: value }))
-  }
+  }, [])
 
-  const resetFilters = () => {
+  const resetFilters = useCallback(() => {
     setFilters({ ...defaultFilters, maxPrice: options.maxAvailablePrice || Infinity })
-  }
+  }, [options.maxAvailablePrice])
 
   return {
     filters,
