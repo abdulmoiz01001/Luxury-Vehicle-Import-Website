@@ -1,4 +1,4 @@
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { Menu, Search, PhoneCall, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { AnimatePresence, LayoutGroup, m, useReducedMotion } from 'framer-motion'
@@ -17,6 +17,11 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false)
   const [footerInView, setFooterInView] = useState(false)
   const prefersReducedMotion = useReducedMotion()
+  const location = useLocation()
+
+  useEffect(() => {
+    setOpen(false)
+  }, [location.pathname, location.hash])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16)
@@ -41,8 +46,8 @@ const Header = () => {
   }, [])
 
   return (
-    <header className="pointer-events-none sticky top-0 z-50">
-      <div className="pointer-events-auto mx-auto w-[94%] md:w-[80%]">
+    <header className="sticky top-0 z-50">
+      <div className="mx-auto w-[94%] md:w-[80%]">
         <m.div
           animate={
             prefersReducedMotion
