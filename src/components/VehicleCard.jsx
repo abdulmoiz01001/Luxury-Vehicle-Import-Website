@@ -28,12 +28,18 @@ const VehicleCard = ({ vehicle, onCompareToggle, isSelected, variant = 'default'
     return (
       <article className="inventory-card">
         <div className="inventory-card-head">
-          <h3>{vehicle.name}</h3>
+          <h3>
+            <Link to={`/vehicle/${vehicle.slug}`} aria-label={`View ${vehicle.name} details`}>
+              {vehicle.name}
+            </Link>
+          </h3>
           <p>Or similar - Small Cars</p>
         </div>
 
         <div className="inventory-car-image-wrap">
-          <img src={vehicle.images[0]} alt={vehicle.name} loading="lazy" className="inventory-car-image" />
+          <Link to={`/vehicle/${vehicle.slug}`} aria-label={`View ${vehicle.name} details`}>
+            <img src={vehicle.images[0]} alt={vehicle.name} loading="lazy" className="inventory-car-image" />
+          </Link>
         </div>
 
         <ul className="inventory-spec-row">

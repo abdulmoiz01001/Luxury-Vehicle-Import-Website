@@ -14,7 +14,7 @@ const brandLogos = [
   { name: 'Daihatsu', src: '/assets/brand/image%205.svg' },
   { name: 'Honda', src: '/assets/brand/image%206.svg' },
   { name: 'Volkswagen', src: '/assets/brand/image%208.svg' },
-  { name: 'Land Rover', src: '/assets/brand/Gradient.svg' },
+  // { name: 'Land Rover', src: '/assets/brand/Gradient.svg' },
 ]
 
 const driveFeatures = [
