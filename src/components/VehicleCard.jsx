@@ -29,7 +29,7 @@ const VehicleCard = ({ vehicle, onCompareToggle, isSelected, variant = 'default'
       <article className="inventory-card">
         <div className="inventory-card-head">
           <h3>
-            <Link to={`/vehicle/${vehicle.slug}`} aria-label={`View ${vehicle.name} details`}>
+            <Link to={`/vehicle/${vehicle.slug}`} aria-label={`View ${vehicle.name} details`} className="block truncate" title={vehicle.name}>
               {vehicle.name}
             </Link>
           </h3>
@@ -88,13 +88,13 @@ const VehicleCard = ({ vehicle, onCompareToggle, isSelected, variant = 'default'
       </div>
 
       <div className="mt-4 flex-1">
-        <h3 className="text-2xl font-bold text-slate-900">{vehicle.name}</h3>
+        <h3 className="truncate text-2xl font-bold text-slate-900" title={vehicle.name}>{vehicle.name}</h3>
         <p className="text-sm text-slate-500">{vehicle.brand} • {vehicle.model} • {vehicle.city}</p>
         <p className="mt-3 text-xl font-bold text-brand-primary">{formatKES(vehicle.price)}</p>
       </div>
 
       <div className="mt-5 flex gap-2">
-        <Link to={`/vehicle/${vehicle.slug}`} className="btn-primary flex-1 text-center" aria-label={`View ${vehicle.name} details`}>
+        <Link to={`/vehicle/${vehicle.slug}`} className="btn-primary  flex-1 text-center" aria-label={`View ${vehicle.name} details`}>
           View Deal
         </Link>
         <button

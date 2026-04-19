@@ -96,8 +96,8 @@ const AboutPage = () => (
         <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {values.map(({ title, Icon }) => (
             <div key={title} className="rounded-lg border border-slate-200 bg-white px-4 py-5">
-              <Icon size={28} className="mx-auto text-brand-primary" />
-              <p className="mt-3 text-sm font-bold text-slate-800">{title}</p>
+              <Icon size={34} className="mx-auto text-brand-primary" />
+              <p className="mt-3 text-lg font-bold text-slate-800">{title}</p>
             </div>
           ))}
         </div>

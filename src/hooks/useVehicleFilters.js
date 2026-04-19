@@ -36,18 +36,29 @@ export const useVehicleFilters = (vehicles = []) => {
     const queryTokens = query.split(/\s+/).filter(Boolean)
     const selectedTransmissions = new Set((filters.transmissions || []).map((item) => String(item).toLowerCase()))
     const selectedBrands = new Set((filters.brands || []).map((item) => String(item).toLowerCase()))
-    const selectedPassengers = new Set((filters.passengers || []).map((item) => Number(item)))
+    const selectedPassengerValues = filters.passengers || []
+    const selectedPassengerNumbers = new Set(
+      selectedPassengerValues
+        .filter((item) => Number.isFinite(Number(item)))
+        .map((item) => Number(item)),
+    )
+    const includeMorePassengers = selectedPassengerValues.includes('more')
 
     return vehicles.filter((vehicle) => {
       const searchable = `${vehicle.name} ${vehicle.brand} ${vehicle.model}`.toLowerCase()
       const vehicleTransmission = String(vehicle.transmission).toLowerCase()
       const vehicleBrand = String(vehicle.brand).toLowerCase()
+      const vehicleSeats = getVehicleSeats(vehicle)
+      const passengerMatches =
+        selectedPassengerValues.length === 0 ||
+        selectedPassengerNumbers.has(vehicleSeats) ||
+        (includeMorePassengers && vehicleSeats > 8)
 
       return (
         queryTokens.every((token) => searchable.includes(token)) &&
         (selectedTransmissions.size === 0 || selectedTransmissions.has(vehicleTransmission)) &&
         (selectedBrands.size === 0 || selectedBrands.has(vehicleBrand)) &&
-        (selectedPassengers.size === 0 || selectedPassengers.has(getVehicleSeats(vehicle))) &&
+        passengerMatches &&
         (filters.brand === 'All' || vehicle.brand === filters.brand) &&
         (filters.model === 'All' || vehicle.model === filters.model) &&
         (filters.fuelType === 'All' || vehicle.fuelType === filters.fuelType) &&

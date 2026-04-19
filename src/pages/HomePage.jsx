@@ -112,7 +112,7 @@ const HomePage = () => {
           <div className="flex items-center justify-center gap-5 md:gap-6">
             <span className="h-10 w-3 rounded-full bg-brand-primary" />
             <div className="rounded-full border-2 border-brand-primary bg-black px-12 py-2 md:px-16 md:py-3">
-              <h2 className="text-2xl text-center font-black tracking-wide text-white md:text-5xl">TRUSTED BRANDS</h2>
+              <h2 className="text-2xl text-center font-black tracking-wide text-white md:text-4xl">TRUSTED BRANDS</h2>
             </div>
             <span className="h-10 w-3 rounded-full bg-brand-primary" />
           </div>

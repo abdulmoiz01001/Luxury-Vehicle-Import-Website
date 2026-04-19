@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+import { FaCar, FaCarSide, FaChargingStation, FaCompass, FaGasPump, FaGem, FaRoad, FaTachometerAlt, FaTractor, FaTruck, FaUsers, FaCog } from 'react-icons/fa'
 import { company } from '../data/company'
 
 const carTypeChips = [
@@ -15,7 +17,13 @@ const carTypeChips = [
   'Commercial',
 ]
 
-const passengerChips = ['2 Passengers', '4 Passengers', '5 Passengers', '7 Passengers', '8 Passengers']
+const passengerChips = [
+  { label: '2 Passengers', value: 2 },
+  { label: '4 Passengers', value: 4 },
+  { label: '5 Passengers', value: 5 },
+  { label: '7 Passengers', value: 7 },
+  { label: '8 Passengers', value: 8 },
+]
 
 const defaultCompanyList = [
   'AUDI',
@@ -77,9 +85,24 @@ const FilterSidebar = ({ resetFilters, filters, options, updateFilter }) => {
     return filters?.search === chip
   }
 
-  const togglePassengerChip = (label) => {
-    const seats = Number(label.split(' ')[0])
-    toggleSelection('passengers', seats)
+  const togglePassengerChip = (value) => {
+    toggleSelection('passengers', value)
+  }
+
+  const getCarTypeIcon = (chip) => {
+    if (chip === 'SUV') return <FaCarSide size={13} aria-hidden="true" />
+    if (chip === 'Automatic') return <FaCog size={13} aria-hidden="true" />
+    if (chip === 'Diesel') return <FaCar size={13} aria-hidden="true" />
+    if (chip === 'Petrol') return <FaGasPump size={13} aria-hidden="true" />
+    if (chip === 'Hybrid') return <FaChargingStation size={13} aria-hidden="true" />
+    if (chip === '4x4 / 4WD') return <FaCompass size={13} aria-hidden="true" />
+    if (chip === 'Agriculture') return <FaTractor size={13} aria-hidden="true" />
+    if (chip === 'Off-Roading') return <FaRoad size={13} aria-hidden="true" />
+    if (chip === 'Family Cars') return <FaUsers size={13} aria-hidden="true" />
+    if (chip === 'Sports Car') return <FaTachometerAlt size={13} aria-hidden="true" />
+    if (chip === 'Luxury') return <FaGem size={13} aria-hidden="true" />
+    if (chip === 'Commercial') return <FaTruck size={13} aria-hidden="true" />
+    return <FaCar size={13} aria-hidden="true" />
   }
 
   return (
@@ -91,9 +114,9 @@ const FilterSidebar = ({ resetFilters, filters, options, updateFilter }) => {
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
         />
-        <a href={company.mapsUrl} target="_blank" rel="noreferrer" className="inventory-map-btn" aria-label="Open map location">
+        <Link to={company.mapsUrl} target="_blank" rel="noreferrer" className="inventory-map-btn" aria-label="Open map location">
           Show On Map
-        </a>
+        </Link>
       </div>
 
       <div className="inventory-filter-meta">
@@ -113,7 +136,10 @@ const FilterSidebar = ({ resetFilters, filters, options, updateFilter }) => {
               onClick={() => toggleQuickChip(chip)}
               className={`inventory-chip ${isQuickChipActive(chip) ? 'inventory-chip-active' : ''}`}
             >
-              {chip}
+              <span className="inventory-chip-content">
+                {getCarTypeIcon(chip)}
+                {chip}
+              </span>
             </button>
           ))}
         </div>
@@ -125,13 +151,21 @@ const FilterSidebar = ({ resetFilters, filters, options, updateFilter }) => {
           {passengerChips.map((chip) => (
             <button
               type="button"
-              key={chip}
-              onClick={() => togglePassengerChip(chip)}
-              className={`inventory-chip ${selectedPassengers.includes(Number(chip.split(' ')[0])) ? 'inventory-chip-active' : ''}`}
+              key={chip.label}
+              onClick={() => togglePassengerChip(chip.value)}
+              className={`inventory-chip ${selectedPassengers.includes(chip.value) ? 'inventory-chip-active' : ''}`}
             >
-              {chip}
+              {chip.label}
             </button>
           ))}
+          <button
+            type="button"
+            className="inventory-more"
+            onClick={() => togglePassengerChip('more')}
+            aria-label={selectedPassengers.includes('more') ? 'Show 8 passengers and below' : 'Show more than 8 passengers'}
+          >
+            {selectedPassengers.includes('more') ? 'Less' : 'More'}
+          </button>
         </div>
       </div>
 

@@ -30,7 +30,7 @@ html {
 }
 
 body {
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Lexend Deca', sans-serif;
   background: var(--color-bg);
   color: var(--color-text);
   line-height: 1.5;
@@ -89,7 +89,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Sora', sans-serif;
+  font-family: 'Lexend Deca', sans-serif;
   line-height: 1.2;
 }
 
@@ -108,6 +108,10 @@ a[class*='btn'],
 .animated-btn {
   transition: transform 0.22s ease, filter 0.22s ease, box-shadow 0.22s ease, background-color 0.22s ease, color 0.22s ease;
   will-change: transform;
+}
+
+.inventory-view-btn{
+  margin: auto;
 }
 
 button:hover,
@@ -239,7 +243,7 @@ a[class*='btn']:active,
 
 .offer-title {
   margin: 0;
-  font-family: 'Sora', sans-serif;
+  font-family: 'Lexend Deca', sans-serif;
   font-size: clamp(2.2rem, 4.8vw, 3rem);
   line-height: 1.17;
   font-weight: 800;
@@ -430,7 +434,7 @@ a[class*='btn']:active,
 .drive-title {
   margin: 0 0 0.4rem;
   text-align: center;
-  font-family: 'Sora', sans-serif;
+  font-family: 'Lexend Deca', sans-serif;
   font-size: clamp(1.9rem, 3.2vw, 2.5rem);
   line-height: 2.12;
   font-weight: 800;
@@ -521,7 +525,7 @@ a[class*='btn']:active,
 
 .drive-card-title {
   margin: 0;
-  font-family: 'Sora', sans-serif;
+  font-family: 'Lexend Deca', sans-serif;
   font-size: clamp(1.35rem, 1.9vw, 1.35rem);
   line-height: 1.2;
   font-weight: 700;
@@ -682,13 +686,13 @@ a[class*='btn']:active,
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: min(200px, 84%);
+  width: min(140px, 84%);
   border-radius: 0.8rem;
   background: #0174b7;
   color: #fff;
   text-align: center;
-  padding: 0.9rem 1rem;
-  font-size: 1.52rem;
+  padding: 0.5rem 0.1rem;
+  font-size: 1rem;
   font-weight: 700;
 }
 
@@ -720,15 +724,15 @@ a[class*='btn']:active,
 }
 
 .inventory-filter-block {
-  margin-top: 1.2rem;
+  margin-top: 2rem;
 }
 
 .inventory-filter-block h3 {
   margin: 0;
-  font-family: 'Sora', sans-serif;
+  font-family: 'Lexend Deca', sans-serif;
   font-size: 2.15rem;
   line-height: 1.2;
-  font-weight: 700;
+  font-weight: 500;
   color: #111827;
 }
 
@@ -757,6 +761,17 @@ a[class*='btn']:active,
   color: #151922;
 }
 
+.inventory-option-with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.inventory-option-with-icon svg {
+  color: #0174b7;
+  flex-shrink: 0;
+}
+
 .inventory-checkbox-company-list {
   max-height: none;
   overflow: visible;
@@ -781,6 +796,21 @@ a[class*='btn']:active,
   line-height: 1.2;
 }
 
+.inventory-chip-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.inventory-chip-content svg {
+  color: currentColor;
+  flex-shrink: 0;
+}
+
+.inventory-chip-active .inventory-chip-content svg {
+  color: currentColor;
+}
+
 .inventory-chip-active {
   background: #05070d;
   border-color: #05070d;
@@ -788,10 +818,20 @@ a[class*='btn']:active,
 }
 
 .inventory-more {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
   align-self: center;
   color: #0174b7;
-  font-size: 0.68rem;
+  font-size: 0.74rem;
   font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.inventory-more:hover {
+  color: #015787;
 }
 
 .inventory-card {
@@ -805,7 +845,7 @@ a[class*='btn']:active,
 
 .inventory-card-head h3 {
   margin: 0;
-  font-family: 'Sora', sans-serif;
+  font-family: 'Lexend Deca', sans-serif;
   font-size: 2rem;
   line-height: 1.15;
   font-weight: 700;
@@ -890,15 +930,15 @@ a[class*='btn']:active,
 
 .inventory-view-btn {
   margin-top: 0.95rem;
-  width: 100%;
+  width: 80%;
   border-radius: 999px;
   display: grid;
   place-items: center;
   background: #0174b7;
   color: #fff;
   min-height: 72px;
-  font-family: 'Sora', sans-serif;
-  font-size: 1.35rem;
+  font-family: 'Lexend Deca', sans-serif;
+  font-size: 1.1rem;
   font-weight: 700;
   box-shadow: 0 16px 26px rgba(1, 116, 183, 0.24);
 }
@@ -1025,7 +1065,7 @@ a[class*='btn']:active,
 
 .vehicle-detail-title-wrap h1 {
   margin: 0;
-  font-family: 'Sora', sans-serif;
+  font-family: 'Lexend Deca', sans-serif;
   font-size: clamp(2.6rem, 4vw, 4.55rem);
   line-height: 1.05;
   font-weight: 800;
@@ -1079,7 +1119,7 @@ a[class*='btn']:active,
 
 .vehicle-detail-card-panel h2 {
   margin: 0;
-  font-family: 'Sora', sans-serif;
+  font-family: 'Lexend Deca', sans-serif;
   font-size: clamp(1.35rem, 1.8vw, 2rem);
   font-weight: 700;
   color: #171d2a;
@@ -1116,7 +1156,7 @@ a[class*='btn']:active,
 .vehicle-detail-card-panel h3 {
   margin: 1.45rem 0 0;
   font-size: 1.05rem;
-  font-family: 'Sora', sans-serif;
+  font-family: 'Lexend Deca', sans-serif;
   font-weight: 700;
   color: #161d2a;
 }
@@ -1160,7 +1200,7 @@ a[class*='btn']:active,
 
 .vehicle-detail-related-wrap h2 {
   margin: 0;
-  font-family: 'Sora', sans-serif;
+  font-family: 'Lexend Deca', sans-serif;
   font-size: clamp(1.8rem, 2.2vw, 2.6rem);
   font-weight: 700;
   color: #151c2a;
@@ -1205,7 +1245,7 @@ a[class*='btn']:active,
 .vehicle-detail-related-card p {
   margin: 0.12rem 0 0;
   font-size: 1rem;
-  font-family: 'Sora', sans-serif;
+  font-family: 'Lexend Deca', sans-serif;
   font-weight: 700;
   color: #171e2b;
 }
@@ -1234,7 +1274,7 @@ a[class*='btn']:active,
 
 .vehicle-detail-right h2 {
   margin: 0.58rem 0 0;
-  font-family: 'Sora', sans-serif;
+  font-family: 'Lexend Deca', sans-serif;
   font-size: clamp(2.3rem, 3.4vw, 3.6rem);
   line-height: 1.03;
   font-weight: 800;
@@ -1381,7 +1421,7 @@ a[class*='btn']:active,
 
 .footer-tagline {
   margin: 0.35rem 0 0;
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Lexend Deca', sans-serif;
   font-size: clamp(1.7rem, 2.4vw, 1.5rem);
   line-height: 1.16;
   font-weight: 400;
@@ -1431,7 +1471,7 @@ a[class*='btn']:active,
 
 .footer-heading {
   margin: 0;
-  font-family: 'Sora', sans-serif;
+  font-family: 'Lexend Deca', sans-serif;
   font-size: clamp(1.35rem, 1.5vw, 1.6rem);
   line-height: 1.14;
   font-weight: 700;

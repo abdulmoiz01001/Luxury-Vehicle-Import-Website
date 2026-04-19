@@ -135,7 +135,7 @@ const CompareVehiclesPage = () => {
                 <AnimatedButton
                   as={Link}
                   to={`/vehicle/${vehicle.slug}`}
-                  className={`flex-1 rounded-full px-4 py-2 text-center text-sm font-bold ${index === 0 ? 'bg-white/88 !text-slate-900 visited:!text-slate-900 hover:!text-slate-900 focus:!text-slate-900' : 'bg-slate-200 text-slate-700'}`}
+                  className={`mx-auto min-w-[138px] rounded-full px-4 py-2 text-center text-sm font-bold sm:mx-0 ${index === 0 ? 'bg-white/88 !text-slate-900 visited:!text-slate-900 hover:!text-slate-900 focus:!text-slate-900' : 'bg-slate-200 text-slate-700'}`}
                 >
                   View Details
                 </AnimatedButton>
