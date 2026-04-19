@@ -8,7 +8,7 @@ import { useEmailForm } from '../hooks/useEmailForm'
 import { compressImageToDataUrl } from '../utils/file'
 
 const MAX_RECEIPT_IMAGE_SIZE_BYTES = 5 * 1024 * 1024
-const EMAILJS_IMAGE_VARIABLE_BUDGET_BYTES = 32 * 1024
+const EMAILJS_IMAGE_VARIABLE_BUDGET_CHARS = 38_000
 
 const initial = {
   fullName: '',
@@ -80,7 +80,7 @@ const SubmitReceiptPage = () => {
     if (form.receipt) {
       try {
         receiptBase64 = await compressImageToDataUrl(form.receipt, {
-          maxBytes: EMAILJS_IMAGE_VARIABLE_BUDGET_BYTES,
+          maxDataUrlLength: EMAILJS_IMAGE_VARIABLE_BUDGET_CHARS,
           maxDimension: 1080,
         })
       } catch (error) {

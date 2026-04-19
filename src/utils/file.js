@@ -35,11 +35,11 @@ const loadImage = (file) =>
 export const compressImageToDataUrl = async (
   file,
   {
-    maxBytes = 32 * 1024,
-    maxDimension = 1080,
-    minQuality = 0.45,
-    qualityStep = 0.08,
-    maxAttempts = 12,
+    maxDataUrlLength = 38_000,
+    maxDimension = 900,
+    minQuality = 0.2,
+    qualityStep = 0.1,
+    maxAttempts = 18,
   } = {},
 ) => {
   if (!String(file?.type || '').startsWith('image/')) {
@@ -75,8 +75,9 @@ export const compressImageToDataUrl = async (
       break
     }
 
-    if (blob.size <= maxBytes) {
-      return blobToDataUrl(blob)
+    const dataUrl = await blobToDataUrl(blob)
+    if (dataUrl.length <= maxDataUrlLength) {
+      return dataUrl
     }
 
     if (quality > minQuality) {
@@ -84,10 +85,10 @@ export const compressImageToDataUrl = async (
       continue
     }
 
-    width = Math.max(320, Math.round(width * 0.86))
-    height = Math.max(320, Math.round(height * 0.86))
+    width = Math.max(140, Math.round(width * 0.82))
+    height = Math.max(140, Math.round(height * 0.82))
     quality = 0.88
   }
 
-  throw new Error('Image is too detailed for email limits. Try a simpler/smaller image.')
+  throw new Error('Image is still too detailed for EmailJS limits. Crop it to receipt area only or upload a clearer screenshot.')
 }
