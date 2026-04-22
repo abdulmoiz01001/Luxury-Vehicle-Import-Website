@@ -96,19 +96,19 @@ const VehicleDetailPage = () => {
 
                 <ul className="vehicle-detail-spec-grid">
                   <li>
-                    <Armchair size={18} />
+                    <Armchair size={32} />
                     <span>{getVehicleSeats(vehicle)} Seats</span>
                   </li>
                   <li>
-                    <SlidersVertical size={18} />
+                    <SlidersVertical size={32} />
                     <span>{vehicle.transmission}</span>
                   </li>
                   <li>
-                    <Snowflake size={18} />
+                    <Snowflake size={32} />
                     <span>Air Condition</span>
                   </li>
                   <li>
-                    <BriefcaseBusiness size={18} />
+                    <BriefcaseBusiness size={32} />
                     <span>2 Large Bags</span>
                   </li>
                 </ul>

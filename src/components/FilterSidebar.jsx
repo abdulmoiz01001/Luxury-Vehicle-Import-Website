@@ -30,7 +30,7 @@ const defaultCompanyList = [
   'BMW',
   'HONDA',
   'VOLKSWAGEN',
-  'LANDROVER',
+  'LAND ROVER',
   'LEXUS',
   'MAZDA',
   'MERCEDES',
