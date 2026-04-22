@@ -62,6 +62,16 @@ const CompareVehiclesPage = () => {
     })
   }
 
+  const handleBuyNowClick = () => {
+    const footer = document.getElementById('site-footer')
+    if (!footer) return
+
+    footer.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    if (window.location.hash !== '#site-footer') {
+      window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}#site-footer`)
+    }
+  }
+
   return (
     <>
       <Seo
@@ -139,7 +149,12 @@ const CompareVehiclesPage = () => {
                 >
                   View Details
                 </AnimatedButton>
-                <AnimatedButton as={Link} to="/#site-footer" className="flex-1 rounded-full bg-brand-primary px-4 py-2 text-center text-sm font-bold !text-white visited:!text-white hover:!text-white focus:!text-white">
+                <AnimatedButton
+                  as="button"
+                  type="button"
+                  onClick={handleBuyNowClick}
+                  className="flex-1 rounded-full bg-brand-primary px-4 py-2 text-center text-sm font-bold !text-white visited:!text-white hover:!text-white focus:!text-white"
+                >
                   Buy Now
                 </AnimatedButton>
               </div>

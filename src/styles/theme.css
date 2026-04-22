@@ -742,6 +742,10 @@ a[class*='btn']:active,
   gap: 0.52rem;
 }
 
+.inventory-checkbox-transmission-list {
+  gap: 1.04rem;
+}
+
 .inventory-checkbox-item {
   display: flex;
   align-items: center;
@@ -776,6 +780,7 @@ a[class*='btn']:active,
   max-height: none;
   overflow: visible;
   padding-right: 0;
+  gap: 1.04rem;
 }
 
 .inventory-chip-wrap {

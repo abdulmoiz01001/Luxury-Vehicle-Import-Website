@@ -73,7 +73,7 @@ const VehicleListingPage = () => {
         schema={[breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Vehicles', path: '/vehicles' }])]}
       />
       <section className="inventory-page bg-white">
-        <div className="inventory-shell mx-auto grid max-w-[1300px] gap-8 px-4 py-10 md:grid-cols-[300px_1fr] md:px-8">
+        <div className="inventory-shell mx-auto grid w-full max-w-[80%] gap-8 px-4 py-8 md:gap-10 md:px-8 lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start lg:gap-12">
           <div className={`inventory-filters-panel ${mobileFiltersOpen ? 'inventory-filters-panel-open' : ''}`}>
             <div className="inventory-mobile-filter-head">
               <button
@@ -99,8 +99,8 @@ const VehicleListingPage = () => {
             </div>
           </div>
 
-          <div>
-            <div className="mb-5">
+          <div className="space-y-6">
+            <div>
               <label htmlFor="inventory-search" className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
                 Search Inventory
               </label>
@@ -123,7 +123,7 @@ const VehicleListingPage = () => {
                 </button>
               </div>
             ) : (
-              <div className="inventory-card-grid grid gap-6 sm:grid-cols-2 xl:grid-cols-2">
+              <div className="inventory-card-grid grid md:ml-16 lg:ml-16 gap-x-6 gap-y-10 sm:grid-cols-2 lg:gap-x-2">
                 {filteredVehicles.map((vehicle) => (
                   <VehicleCard
                     key={vehicle.slug}

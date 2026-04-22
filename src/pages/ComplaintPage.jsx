@@ -21,7 +21,7 @@ const ComplaintPage = () => {
         from_email: data.email,
         phone: data.phone?.trim() || 'Not provided',
         chassis_number: 'N/A',
-        register_number: 'N/A',
+        registration_number: 'N/A',
         model_name: data.vehicle?.trim() || 'Not provided',
         complaint_message: data.complaint,
         receipt_file_name: 'No file uploaded',

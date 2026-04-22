@@ -53,7 +53,11 @@ const FilterSidebar = ({ resetFilters, filters, options, updateFilter }) => {
   const selectedBrands = filters?.brands || []
   const selectedPassengers = filters?.passengers || []
 
-  const transmissionOptions = ['Automatic', 'Manual', ...(options?.transmissions || []).filter((item) => !['Automatic', 'Manual'].includes(item))]
+  const transmissionOptions = [
+    'Automatic',
+    'Manual',
+    ...(options?.transmissions || []).filter((item) => !['Automatic', 'Manual', 'CVT'].includes(item)),
+  ]
 
   const companyOptions = Array.from(new Set([...defaultCompanyList, ...(options?.brands || []).map((item) => String(item).toUpperCase())]))
 
@@ -171,7 +175,7 @@ const FilterSidebar = ({ resetFilters, filters, options, updateFilter }) => {
 
       <div className="inventory-filter-block">
         <h3>Transmission</h3>
-        <div className="inventory-checkbox-list">
+        <div className="inventory-checkbox-list inventory-checkbox-transmission-list">
           <label className="inventory-checkbox-item">
             <input
               type="checkbox"

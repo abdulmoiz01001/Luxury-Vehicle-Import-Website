@@ -60,7 +60,15 @@ const HomePage = () => {
       <section className="relative -mt-[86px] min-h-screen overflow-hidden bg-black pt-[96px] text-white md:-mt-[98px] md:pt-[110px]">
         <img src="/assets/hero_section-bg.svg" alt="Luxury vehicle showroom" className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-black/45" />
-        <div className="relative mx-auto flex min-h-[calc(100svh-96px)] max-w-7xl flex-col items-center justify-center px-4 pb-14 text-center md:min-h-[calc(100svh-110px)] md:px-8">
+        <div className="relative mx-auto md:pb-[200px] lg:pb-[200px] flex min-h-[calc(100svh-96px)] max-w-7xl flex-col items-center justify-center px-4 pb-14 text-center md:min-h-[calc(100svh-110px)] md:px-8">
+          <m.img
+            src="/assets/logo-hero-section.png"
+            alt="Bhinder Corporation hero logo"
+            className="mb-4 h-auto w-[232px] md:mb-5 md:w-[368px]"
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.05 }}
+          />
           <m.h1
             className="max-w-4xl text-[2.2rem] font-black leading-tight text-white md:text-[3rem]"
             initial="hidden"

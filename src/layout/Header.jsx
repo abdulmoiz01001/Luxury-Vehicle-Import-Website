@@ -31,6 +31,32 @@ const Header = () => {
     setSearchOpen(false)
   }
 
+  const handleContactNavigation = (event) => {
+    event.preventDefault()
+    setOpen(false)
+
+    const scrollToFooter = () => {
+      const footer = document.getElementById('site-footer')
+      if (!footer) return
+      footer.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      if (window.location.hash !== '#site-footer') {
+        window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}#site-footer`)
+      }
+    }
+
+    if (location.pathname !== '/') {
+      navigate('/#site-footer')
+      return
+    }
+
+    scrollToFooter()
+  }
+
+  const isRouteActive = (to) => {
+    if (to === '/') return location.pathname === '/'
+    return location.pathname === to
+  }
+
   useEffect(() => {
     setOpen(false)
   }, [location.pathname, location.hash])
@@ -61,7 +87,12 @@ const Header = () => {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setFooterInView(entry.isIntersecting)
+        const visible = entry.isIntersecting
+        setFooterInView(visible)
+
+        if (!visible && window.location.hash === '#site-footer') {
+          window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`)
+        }
       },
       { threshold: 0.28 },
     )
@@ -109,7 +140,7 @@ const Header = () => {
               <nav className="hidden items-center gap-6 md:flex" aria-label="Primary navigation">
                 {navItems.map((item) => (
                   item.label === 'Contact Us' ? (
-                    <Link key={item.to} to={item.to} className="relative !text-white text-base font-medium">
+                    <Link key={item.to} to={item.to} onClick={handleContactNavigation} className="relative !text-white text-base font-medium">
                       <m.span
                         whileHover={prefersReducedMotion ? undefined : { scale: 1.04, color: '#79c9ff' }}
                         transition={{ duration: 0.18 }}
@@ -132,7 +163,9 @@ const Header = () => {
                       end={item.to === '/'}
                       className="relative !text-white text-base font-medium"
                     >
-                      {({ isActive }) => (
+                      {() => {
+                        const isActive = !footerInView && isRouteActive(item.to)
+                        return (
                         <m.span
                           whileHover={prefersReducedMotion ? undefined : { scale: 1.04, color: '#79c9ff' }}
                           transition={{ duration: 0.18 }}
@@ -147,7 +180,8 @@ const Header = () => {
                             />
                           ) : null}
                         </m.span>
-                      )}
+                        )
+                      }}
                     </NavLink>
                   )
                 ))}
@@ -206,7 +240,7 @@ const Header = () => {
                     <Link
                       key={item.to}
                       to={item.to}
-                      onClick={() => setOpen(false)}
+                      onClick={handleContactNavigation}
                       className={`block !text-white text-base font-medium transition ${footerInView ? 'translate-x-1 text-white underline decoration-brand-primary decoration-2 underline-offset-4' : 'opacity-95 hover:translate-x-1 hover:opacity-100'}`}
                     >
                       {item.label}
@@ -217,9 +251,12 @@ const Header = () => {
                       to={item.to}
                       end={item.to === '/'}
                       onClick={() => setOpen(false)}
-                      className={({ isActive }) =>
+                      className={() => {
+                        const isActive = !footerInView && isRouteActive(item.to)
+                        return (
                         `block !text-white text-base font-medium transition ${isActive ? 'translate-x-1 text-white underline decoration-brand-primary decoration-2 underline-offset-4' : 'opacity-95 hover:translate-x-1 hover:opacity-100'}`
-                      }
+                        )
+                      }}
                     >
                       {item.label}
                     </NavLink>

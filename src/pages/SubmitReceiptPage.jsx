@@ -35,7 +35,7 @@ const SubmitReceiptPage = () => {
         from_email: data.email,
         phone: data.phone?.trim() || 'Not provided',
         chassis_number: data.chassisNumber,
-        register_number: data.registerNumber,
+        registration_number: data.registerNumber,
         model_name: data.modelName,
         complaint_message: data.complaintMessage?.trim() || 'No complaint message provided.',
         receipt_file_name: extra.receiptName || 'No file uploaded',
@@ -60,7 +60,7 @@ const SubmitReceiptPage = () => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) next.email = 'Valid email required.'
     if (form.phone.trim() && !/^\+?[\d\s]{8,}$/.test(form.phone)) next.phone = 'Enter a valid phone number or leave it empty.'
     if (!form.chassisNumber.trim()) next.chassisNumber = 'Chassis number is required.'
-    if (!form.registerNumber.trim()) next.registerNumber = 'Register number is required.'
+    if (!form.registerNumber.trim()) next.registerNumber = 'Registration number is required.'
     if (!form.modelName.trim()) next.modelName = 'Model name is required.'
     if (form.receipt && !String(form.receipt.type).startsWith('image/')) {
       next.receipt = 'Only image files are supported for email preview.'
@@ -121,7 +121,7 @@ const SubmitReceiptPage = () => {
             <FormInput label="Email" hideLabel variant="dark" id="receipt-email" type="email" placeholder="Email" value={form.email} onChange={(e) => setForm((v) => ({ ...v, email: e.target.value }))} error={errors.email} />
             <FormInput label="Phone Number" hideLabel variant="dark" id="receipt-phone" placeholder="Phone Number" value={form.phone} onChange={(e) => setForm((v) => ({ ...v, phone: e.target.value }))} error={errors.phone} />
             <FormInput label="Chassis Number" hideLabel variant="dark" id="receipt-chassis" placeholder="Chassis Number" value={form.chassisNumber} onChange={(e) => setForm((v) => ({ ...v, chassisNumber: e.target.value }))} error={errors.chassisNumber} />
-            <FormInput label="Register Number" hideLabel variant="dark" id="receipt-register" placeholder="Register Number" value={form.registerNumber} onChange={(e) => setForm((v) => ({ ...v, registerNumber: e.target.value }))} error={errors.registerNumber} />
+            <FormInput label="Registration Number" hideLabel variant="dark" id="receipt-register" placeholder="Registration Number" value={form.registerNumber} onChange={(e) => setForm((v) => ({ ...v, registerNumber: e.target.value }))} error={errors.registerNumber} />
             <FormInput label="Model Name" hideLabel variant="dark" id="receipt-model" placeholder="Model Name" value={form.modelName} onChange={(e) => setForm((v) => ({ ...v, modelName: e.target.value }))} error={errors.modelName} />
 
             <label htmlFor="receipt-file" className="block">
