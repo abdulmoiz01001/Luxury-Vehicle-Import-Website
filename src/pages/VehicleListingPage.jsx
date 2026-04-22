@@ -123,7 +123,7 @@ const VehicleListingPage = () => {
                 </button>
               </div>
             ) : (
-              <div className="inventory-card-grid grid md:ml-16 lg:ml-16 gap-x-6 gap-y-10 sm:grid-cols-2 lg:gap-x-2">
+              <div className="inventory-card-grid grid gap-x-6 gap-y-8 sm:grid-cols-2 sm:gap-y-10 lg:gap-x-7">
                 {filteredVehicles.map((vehicle) => (
                   <VehicleCard
                     key={vehicle.slug}
